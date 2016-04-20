@@ -1,0 +1,23 @@
+Chapter 2: Bit Manipulation and Data Representation - Discussion
+
+Group: B.1
+Matteus Laurent, matla782
+Oscar Petersson, oscpe262
+
+Questions:
+
+1) We could use the "add" operator to achieve the result we want. This is because we know that the register at the start of section 3 is equal to 0. In this case, the operand should still be given in hex or with left-shift (1 << b  ; b = bit to set), to increase readability.
+
+However, our opinion is that the OR operation is still preferable since it distances the line of code from arithmetic semantics, as to not confuse.
+
+2) The code already does a fairly good job at avoiding hazardous system behaviour. We can consider the following boolean variables as organized in pairs:
+* isCoolerOn/isHeaterOn, isGreenOn/isRedOn, isHumidity2High_n/isHumidity2Low_n
+When we assign one a value, we always assign its respective counterpart the correct value as well, even if we believe we know the value of the counterpart to already be correct.
+
+The temperature sensor yields 8 bits to the input register. While the sensor produces inputs according to specification, the program runs with known behaviour. However, illegal inputs in the 11110.001 - 11110.111 range is not currently accounted for. The fractional part is also currently allowed to represent values between 0.0 to 1.4, which however does not disrupt program behaviour as long as the decimal part is less than 30.
+
+3) -
+
+4) Heater/cooler turns off when the temperature has reached or surpassed the target temperature. Heater/cooler only turns on when the temperature is more than Hysteresis_{Cooler/Heater} degrees off - which in the case of the lab is 0.3 degrees.
+
+5) Hysteresis is implemented to avoid undesired flickering. Without it, there'd be no state where both cooler and heater are idle when the AC switch is 'on'.
