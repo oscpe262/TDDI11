@@ -1,0 +1,38 @@
+1. Why “stopTime” is defined as “DWORD32”?
+Now_Plus and Milliseconds() return data types of 32 b size
+
+2. Why “finalCount” is defined as “QWORD64”?
+CPU_C_C returns data types of 64 b size
+
+3. What does “Now_Plus()” do?
+Takes a value v (in s) and returns CPU timestamp + v
+
+4. What does “CPU_Clock_Cycles()” do?
+returns CPU timestamp in clock cycles
+
+5. What does “x” (or similarly “xM”) represent?
+x = diff in clock cycles between initialCount = CPU_Clock_Cycles and finalcount = CPU_C-C
+xM = x in millions
+
+6. What does “Milliseconds()” do?
+returns age of process in ms
+
+7. Compare numbers printed by section 2 and sections 3 of the code
+7.1. Are they different?
+Not by much
+
+7.2. Should they be similar?
+Yes
+
+7.3. How do you explain that these two sections may report different values?
+Granularity is lower in sec. 3?
+
+7.4. Which approach (section 2 or 3) is more appropriate? Why?
+2 if precision is needed, else 3(???)
+
+8. Section 4 prints two different numbers. What causes their difference?
+Time run (in ms) between execution of the two plus the value 2345.
+
+9. Consider an operation (e.g., multiplication, addition, …) and approximate its execution time. A
+technique is to perform multiple of the selected operation in a loop and divide the overall time by the
+number of executions it had in the loop. 
