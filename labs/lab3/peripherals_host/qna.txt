@@ -6,4 +6,36 @@
 
 4) alpha can be regarded as a saturation rate of the input noise filter. Lower values = longer saturation time, i.e. peaks have to be sustained for longer to reach motionThreshold.
 
-5) //TSIU03 lp-filter//
+5) //TSIU03 lp-filter?//
+
+6)
+bool Pressed = 0;
+int Pressed_Confidence_Level = 0;
+int Released_Confidence_Level = 0;
+
+while (1){
+ if () {
+   Pressed_Confidence_Level ++; //Increase Pressed Conficence
+   Released_Confidence_Level = 0; //Reset released button confidence since there is a button press
+   if (Pressed_Confidence_Level >500) //Indicator of good button press
+      {
+	if (Pressed == 0)
+	   {
+		Pressed = 1;
+	   }
+		//Zero it so a new pressed condition can be evaluated
+         Pressed_Confidence_Level = 0;
+       }
+   }
+   else
+   {
+	Released_Confidence_Level ++; //This works just like the pressed
+	Pressed_Confidence_Level = 0; //Reset pressed button confidence since the button is released
+	if (Released_Confidence_Level >500
+	{
+		Pressed = 0;
+		Released_Confidence_Level = 0;
+	}
+   }
+ }
+}
