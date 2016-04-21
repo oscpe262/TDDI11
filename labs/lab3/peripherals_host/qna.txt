@@ -1,0 +1,9 @@
+1) No, it's relative the polling interval (OS/driver dependent). The distance is the same, but time differs, (i.e. compare velocity).
+
+2) Taxicab distance. Measuring distance by approximating a diagonal line by stepping the distance in straight angles.
+
+3) Pros: More exact values, but is computation expensive compared to TCD.
+
+4) alpha can be regarded as a saturation rate of the input noise filter. Lower values = longer saturation time, i.e. peaks have to be sustained for longer to reach motionThreshold.
+
+5) //TSIU03 lp-filter//
