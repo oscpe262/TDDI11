@@ -4,7 +4,7 @@ Group: B.1
 Matteus Laurent, matla782
 Oscar Petersson, oscpe262
 
-
+ 
 ** Section 3.2.1: Assignments **
 
 1.   Because Now_Plus(ARG) and Milliseconds() return 32 bits of data,
