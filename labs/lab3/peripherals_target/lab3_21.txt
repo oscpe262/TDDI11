@@ -1,0 +1,42 @@
+** Chapter 3: Peripherals **
+
+Group: B.1
+Matteus Laurent, matla782
+Oscar Petersson, oscpe262
+
+
+** Section 3.2.1: Assignments **
+
+1. Because Now_Plus(ARG) and Milliseconds() return 32 bits of data, representing the unsigned value of time in milliseconds since the program started (Now_Plus system timer?).
+
+2. Because CPU_Clock_Cycles() returns 64 bits of data representing CPU clock cycles since processor reset. Note that only in a matter of a second or two, the size of the value returned is already in the 32-bit range.
+
+3. Now_Plus(ARG) takes a value ARG in seconds and returns (system timer?) "now" + 1000*ARG in milliseconds.
+
+4. CPU_Clock_Cycles() returns amount of clock cycles since CPU reset.
+
+5. 'x' is assigned the difference in clock cycles between the program's two instances of:
+-  initialCount = CPU_Clock_Cycles();
+-  finalCount = CPU_Clock_Cycles();   
+
+xM is just x in millions.
+
+6. Returns the age of the program in milliseconds.
+
+7.1. Most of the time, no.
+
+7.2. Yes. We're essentially timing CPU clocks cycles in a second using two different support functions, but with similar functionalities.
+
+7.3. The granularity of a millisecond is rough. We set stopTime as our millisecond target for stopping. Assuming nothing is interrupting the program, it will hit the shift pretty accurately and exit the busy-wait loop at that instant only being at most few clock cycles off.
+
+However, when we assign stopTime a value, we essentially ask to assign it -now-. The system won't wait for a millisecond to shift and then immediately assign stopTime the most updated value. Thus, given unequal states to start either timings, this can lead to a millisecond's variance of clock cycles between separate measurements, or a distribution range of 0.1% of the measured values when timing 1000 ms. This hypothesis is supported by a majority of measurements following this idea.
+
+Assume perfectly equal starting states for each run - this difference could still exist, but it would be static. Since the difference in results are dynamic, the program is either consistently interrupted right as the second is about to pass, or we must assume that the emulation environment does not provide perfectly equal starting states.
+
+7.4. A call of Milliseconds() is probably faster to execute than Now_Plus(ARG), given their respective descriptions in the libepc_doc.pdf document. This difference is however miniscule in its influence on measurement variance.
+
+8. We're printing t(0) which is the value returned by the first call of Milliseconds() in section 4. Then we're printing t(1) + 2345 (approximately 2345 ms later), where t(1) is the value returned by the second call of Milliseconds().
+
+9. Addition: ~3 ns.
+   Multiplication: Slightly less than ~5 ns.
+Refer to demonstration for details and more examples.

@@ -1,0 +1,5 @@
+* Di2.b
+* Positive: Understanding of typical timing functions using a bare-machine embedded system or in an OS environment. Some good concepts in general to be aware of ("moving average", alternate distance metrics, "push button debouncing").
+* Negative: The obligatory code hand-in for the second part seems pointless. ALso, other than showcasing some timebased functions in the OS environment, the blinking light section seemed out of place and held little purpose.
+* Time: 6 - 7h?
+* There should be a reference in the manual from the first part of chapter 3 to section 3.5. A lot of students, us included, were not aware of the existence of the libepc library specifications at first.

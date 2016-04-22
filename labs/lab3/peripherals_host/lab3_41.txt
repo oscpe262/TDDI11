@@ -1,0 +1,53 @@
+** Chapter 3: Peripherals **
+
+Group: B.1
+Matteus Laurent, matla782
+Oscar Petersson, oscpe262
+
+
+** Section 3.4.1: Assignments **
+
+1. No. 'motionMetric' presumably updates @ 125 Hz (at most! XCheckMaskEvent() only returns true when there has been mouse movement, tiny or not). 'motionMetric' is a value to represent distance moved since last measurement, given by differences in 'xevent'. Move slower and motionMetric will be lower. Move faster and it will be higher. The thing that will remain fairly unaffected is the distance moved, which can be read as the integral on the graph x: timestamp, y: motionMetric.
+
+Secondly, this also assumes alpha = 1. Any alpha =/= 1 will consider motionMetric values preceeding each experiment to a varying degree.
+
+
+2. Taxicab-, or L1-, distance, which is a true measure of distance, or, a metric (http://www.econ.upf.edu/~michael/stanford/maeb5.pdf - 5.1, The axioms of distance), could be considered. In this metric, distance is measured as if we could only move parallell along any axis, which leads to the following formula for distance on a 2-d plane with x and y as its axes:
+
+d(i,j) = |x(i) - x(j)| + |y(i) - y(j)|
+
+
+3. Euclidean metric: more accurate, but more costly.
+
+Obviously, Euclidean metric models the real world in instances where we can move any direction (along the plane in 2-d) and not only parallell along the axes. It's more suitable to use when measuring exact distances of movement in intervals. However, say we don't really care about "how great" this distance is, just a general "kind of somewhere roughly out there", calculating L1-distance is obviously faster.
+
+
+4. Alpha represents how influenced 'motionMetric' is by each new respective measurement. An alpha of 1 means motionMetric is the same as the very latest measurement. An alpha close to 0 means new incoming measurements are very slow to affect the 'motionMetric' value.
+
+Alpha = 0.01 :
+      From a sufficiently long calm (read: soft, slow movement) state, short jerky movements, although fast, are not persistent enough to trigger the default motionThreshold value of 90. At the same time, if our movements are persistent and fast enough for a while, soft movements right after will still have high 'motionMetric' values.
+
+Alpha = 0.5 :
+      motionMetric is more responsive and more closely resembles the actual movements/velocity of the mouse. However, something like a momentuous transfer of a lot of kinetic energy (contact being brief) will produce output of motionMetric that would plot like a parabole, rather than a steep upwards incline followed by a gentler drop of mouse velocity, as friction makes it come to a stop.
+
+Alpha = 0.99 :
+      Any erratic sensor behaviour will/would show up here, as motionMetric responds almost instantly to mouse movement. It's however a bit more difficult to read stable approximations of continuous mouse velocity.
+
+Instead of formulating properties that we'd like motionMetric to exhibit, we're just going to be cheeky here and suggest alpha = 0.8.
+
+
+5. (https://en.wikipedia.org/wiki/Moving_average)
+
+The moving average method used in this lab is an "exponential moving average", where historical input never fully diminishes, but has an influence exponentially diminishing per discrete measurement time period.
+
+One alternative would be to use a "simple moving average" that outputs the unweighted mean of the previous 'n' data measurements. The last n measurements then hold equal influence on the current output, and a measurement is as good as void once it is older than the last n performed. E.g.:
+
+shift(&combinedMotion, newData);
+motionMetric = ( combinedMotion[0] + ... + combinedMotion[n-1] ) / n;
+
+(obviously makes more sense to use the array circularly and track latest index for insertion, but it's not quite as illustrating of our point)
+
+
+6. (https://www.arduino.cc/en/Tutorial/Debounce)
+
+New button output won't register until it's been stable in its current opposite state for a set amount of time.

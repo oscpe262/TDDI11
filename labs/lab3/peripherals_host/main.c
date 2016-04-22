@@ -3,6 +3,7 @@
 #include <math.h>
 #include <X11/Xlib.h>
 
+
 // compile and run
 // gcc main.c -lm -lX11
 // ./a.out
@@ -20,11 +21,11 @@ int main(int argc, char **argv)
 	double combinedMotion = 0; 
 	double motionMetric = 0; 	
 	static double motionThreshold = 90;
-	static double alpha = 0.8;
+	static double alpha = 0.80;
 	double beta = 1 - alpha;
 	struct timeval  timeReadOut;	
 	long double timerValueSeconds = 0;
-	static long double blinkHalfCycleSeconds = 0.3;
+	static long double blinkHalfCycleSeconds = 0.5 ;
 	long double nextActionTime = 0;
 
 	// initialize environment for listening to Mouse
@@ -43,10 +44,12 @@ int main(int argc, char **argv)
 	printf("Current timer value is %Lf seconds\n", timerValueSeconds);
 	nextActionTime = timerValueSeconds + blinkHalfCycleSeconds;
 
+	system("clear");
+
 	while(true)
 	{
 		//+++++ section 2. Update motion metric ++++++++++++++++++
-
+	  
 		if(XCheckMaskEvent(display, PointerMotionMask, &xevent))
 		{
 			// calculate motion
@@ -63,7 +66,7 @@ int main(int argc, char **argv)
 			//printf("motionMetric = %f\n", motionMetric); //for debug
 			if (motionMetric > motionThreshold)
 				printf("\nLarge motion detected. Motion Metric = %f\n", motionMetric);
-		}
+				}
 
 		//+++++ section 3. Time-based actions +++++++
 
@@ -74,10 +77,11 @@ int main(int argc, char **argv)
 		{	
 			nextActionTime = timerValueSeconds + blinkHalfCycleSeconds;
 			fflush(stdout);
+			//printf("\r");
 			if(blinkOn)
-				printf("X\r");
+				printf("X");
 			else
-				printf(".\r");
+				printf(".");
 			blinkOn = !blinkOn;
 			fflush(stdout);	
 		}	  
