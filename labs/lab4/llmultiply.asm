@@ -49,7 +49,6 @@ llmultiply:
 	MOV EBP, ESP
 
 	;; Reset
-	
 	MOV EDX, 0
 
 	;; Result ...
