@@ -1,6 +1,6 @@
 *.dropbox*
 a.out
-\#*
+#*
 *~
 *.a
 *.o
