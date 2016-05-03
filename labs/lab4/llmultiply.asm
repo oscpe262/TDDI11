@@ -51,7 +51,7 @@ llmultiply:
 	;; Reset
 	MOV EDX, 0
 
-	;; Result ...
+	;; Result address...
 	MOV EBX, [EBP + RES_OFF]
 
 	;; AL * BL
