@@ -44,12 +44,10 @@ RES_OFF	EQU     24	; Offset from EBP to result array pointer
         
 	GLOBAL llmultiply
 
+	;; Not very optimized for speed. Avoid moves where applicable, use more regs ...
 llmultiply:
 	PUSH EBP
 	MOV EBP, ESP
-
-	;; Reset
-	MOV EDX, 0
 
 	;; Result address...
 	MOV EBX, [EBP + RES_OFF]
