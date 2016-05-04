@@ -48,9 +48,6 @@ llmultiply:
 	PUSH EBP
 	MOV EBP, ESP
 
-	;; Reset
-	MOV EDX, 0
-
 	;; Result address...
 	MOV EBX, [EBP + RES_OFF]
 
