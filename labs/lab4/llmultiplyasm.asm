@@ -44,57 +44,52 @@ RES_OFF	EQU     24	; Offset from EBP to result array pointer
         
 	GLOBAL llmultiply
 
-	;; Not very optimized for speed. Avoid moves where applicable, use more regs ...
 llmultiply:
 	PUSH EBP
 	MOV EBP, ESP
 
-	;; Result address...
-	MOV EBX, [EBP + RES_OFF]
-
-	;; AL * BL
-	MOV EAX, [EBP + AL_OFF]
-	MOV EDX, [EBP + BL_OFF]
-	MUL EDX
-
-	;; Add to result,
-	;; * | * | (AL*BL)H | (AL*BL)L 
-	MOV [EBX], EAX		
-	MOV [EBX + 4], EDX	
-
-	;; AL * BH
-	MOV EAX, [EBP + AL_OFF]
-	MOV EDX, [EBP + BH_OFF]
-	MUL EDX
+	MOV ESI, [EBP + RES_OFF]
 	
-	;; Add to result,
-	;; * -> c | (AL*BH)H + c | (AL*BL)H+(AL*BH)L | (AL*BL)L
-	MOV [EBX + 8], EDX  	; (AL*BH)H
-	ADD [EBX + 4], EAX	; (AL*BH)L
-	ADC [EBX + 8], dword 0	; carry
-	ADC [EBX + 12], dword 0 ; carry
-	
-	;; AH * BL
-	MOV EAX, [EBP + AH_OFF]
-	MOV EDX, [EBP + BL_OFF]
-	MUL EDX
-	
-	;; Add to result,
-	;; * -> 0 -> c | (AL*BH)H+(AH*BL)H | (AL*BL)H+(AL*BH)L+(AH*BL)L | (AL*BL)L
-	MOV [EBX + 12], dword 0 ; reset high carry
-	ADD [EBX + 4], EAX	; (AH*BL)L
-	ADC [EBX + 8], EDX	; (AH*BL)H
-	ADC [EBX + 12], dword 0 ; carry
-	
-	;; AH * BH
-	MOV EAX, [EBP + AH_OFF]
-	MOV EDX, [EBP + BH_OFF]
-	MUL EDX
+	;; result 3 .. 0
+	MOV EAX, [EBP + AL_OFF]		; prepare a-side operand 
+	MUL dword [EBP + BL_OFF]	; multiply with b-side operand, result in EDX:EAX
 
-	;; Add to result,
-	;; (AH*BH)H+c | (AL*BH)H+(AH*BL)H+(AH*BH)L | (AL*BL)H+(AL*BH)L+(AH*BL)L | (AL*BL)L
-	ADD [EBX + 8], EAX	; (AH*BH)L
-	ADC [EBX + 12], EDX	; (AH*BH)H
+	MOV [ESI], EAX			; ***Tier 1 in result 3 .. 0***
+	
+	;; result 7 .. 4
+	MOV EBX, EDX			; Tier 2 part: (al * bl)h in EBX
+	
+	MOV EAX, [EBP + AL_OFF]		; al * bh
+	MUL dword [EBP + BH_OFF]	;
+
+	ADD EBX, EAX			; Add Tier 2 part: EBX += (al * bh)l -- (**) POTENTIAL CARRY to t3
+	ADC EDX, 0			; Add carry to Tier 3 part: (al * bh)h + pc in EDX, (**)
+	MOV ECX, EDX			; Tier 3 part: Move to ECX - (al * bh)h + pc
+	
+	MOV EAX, [EBP + AH_OFF]		; ah * bl
+	MUL dword [EBP + BL_OFF]	; 
+
+	ADD EBX, EAX			; Add Tier 2 part: EBX += (ah * bl)l -- (**) POTENTIAL CARRY to t3
+	ADC EDX, 0			; Add carry to other Tier 3 part: (ah * bl)h + pc in EDX, (**)
+
+	MOV [ESI + 4], EBX		; ***Tier 2 in result 7 .. 4***
+
+	;; result 11 .. 8
+	MOV EBX, EDX			; Move other tier 3 part to EBX.
+
+	MOV EAX, [EBP + AH_OFF]		; ah * bh
+	MUL dword [EBP + BH_OFF]	; 
+
+	ADD EBX, EAX			; Add two tier 3 parts: EBX += (ah * bh)l + pc -- (**) POTENTIAL CARRY to t4
+	ADC EDX, 0			
+	ADD EBX, ECX			; Add last tier 3 part: EBX += (al * bh)h + pc -- (**) POTENTIAL CARRY to t4
+	ADC EDX, 0			; Note how it's mathematically impossible for tier 4 to generate a carry.
+
+	MOV [ESI + 8], EBX		; ***Tier 3 in result 11 .. 8***
+	
+	;; result 15 .. 12
+	MOV [ESI + 12], EDX		; ***Tier 4 in result 15 .. 12***
+
 	
 	POP EBP				; restore EBP reg
-	RET				;  return
+	RET				; return

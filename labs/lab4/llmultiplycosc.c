@@ -16,14 +16,13 @@ void llmultiply(unsigned long long int a,
 
   *(unsigned long long int *)result = 0;
   *(unsigned long long int *)(result + 8) = 0;
-
-  *(unsigned long long int *)result += aLo_bLo;
+  
+ 
+  *(unsigned long long int *)result = aLo_bLo;
   *(unsigned long long int *)(result + 4) += aLo_bHi;
+  if (*(unsigned long long int *)(result + 4) < aLo_bHi)  aHi_bHi += 0x0000000100000000;
+  *(unsigned long long int *)(result + 4) += aHi_bLo;
+  if (*(unsigned long long int *)(result + 4) < aHi_bLo)  aHi_bHi += 0x0000000100000000;
   *(unsigned long long int *)(result + 8) += aHi_bHi;
-
-  //Caution to not miss any 64-bit carries
-
-  *(unsigned long long int *)(result + 4) += (aHi_bLo & 0xFFFFFFFF); //aHi_bLo - low
-  *(unsigned long long int *)(result + 8) += (aHi_bLo >> 32); //aHi_bLo - high
-  	      
+  
 }

@@ -44,32 +44,24 @@ int main(int argc, char *argv[])
 {
   unsigned char result[16];
   int i;
+  DWORD32 startTime = 0;
+  DWORD32 stopTime = 0;
   
   ClearScreen(0x07);
   SetCursorPosition(0, 0);
+  
+  startTime = Milliseconds();
 
-  for (i = 0; i < 6; ++i)
-  {
-    PutString("Test : ");
-    PutUnsignedLongLong(&cases[i].a);
-    PutString(" * ");
-    PutUnsignedLongLong(&cases[i].b); 
-    PutString("\r\n");
-   
-    PutString("    == ");
-    PutUnsignedLongLong(&cases[i].rh);
-    PutUnsignedLongLong(&cases[i].rl);
-    PutString("\r\n");
-    
-    llmultiply(cases[i].a, cases[i].b, result);
-    
-    PutString("Result ");
-    PutUnsignedLongLong(&result[8]);
-    PutUnsignedLongLong(&result[0]); 
-    PutString("\r\n");
-    
-    PutString("\r\n");
+  for (i = 0 ; i < 10000000 ; ++i) {
+    llmultiply(cases[i%6].a, cases[i%6].b, result);
   }
+  
+  stopTime = Milliseconds();
+
+  PutString("llmultiply-loop with 10 million iterations took:");
+  SetCursorPosition(1, 0);
+  PutUnsigned(stopTime - startTime, 10, 8);
+  PutString(" ms");
 
   return 0;
 }
