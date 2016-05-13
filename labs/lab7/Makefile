@@ -1,4 +1,4 @@
-OBJ    = main.o serial.o inbound.o outbound.o elapsed.o packet.o isr.o
+OBJ    = main.o serial.o inbound.o outbound.o elapsed.o packet.o isr.o count.o
 
 COURSE   = /home/TDDI11/sw
 LDSCRIPT = $(COURSE)/lib/link.cmd

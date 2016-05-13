@@ -6,12 +6,19 @@
 #include "inbound.h"
 #include "elapsed.h"
 #include "serial.h"
+#include "count.h"
+#include <ctype.h>
 
 static OS_EVENT* SendLock = NULL;
 
 void ReceivePackets(void)
 {
   SerialInit() ;
+
+  //meh fundera på det här ett tag ...
+  char ccstring[5];
+  char *ccsp;
+  int char_count = 0;
   
   for (;;)
   {
@@ -22,13 +29,14 @@ void ReceivePackets(void)
       continue ;
     
     switch (type = SerialGet())
-    {
+      {
       default:
         continue ;
       case 1:
       case 2:
+      case 3:
         break ;
-    }
+      }
     
     bytes = SerialGet();
     bfr = (BYTE8 *) malloc(bytes) ;
@@ -37,20 +45,28 @@ void ReceivePackets(void)
       for (;;)
         ;
     }
+
+    if (type == 1)
+      char_count += bytes;
     
     for (byte = 0; byte < bytes; byte++)
-    {
-      bfr[byte] = SerialGet() ;
-    }
+      {
+	bfr[byte] = SerialGet() ;
+      }
     switch (type)
       {
       case 1:
         PostText(bfr) ;
+	ccsp = FormatUnsigned(ccstring, char_count, 10, 5, '0'); // och det här
+	SendPacket(3,*ccsp,5);
         break ;
       case 2:
         PostTime(bfr) ;
         break ;
-    }
+      case 3:
+        PostCount(bfr);
+	break;
+      }
   }
 }
 
