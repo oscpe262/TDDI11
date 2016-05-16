@@ -15,9 +15,7 @@ void ReceivePackets(void)
 {
   SerialInit() ;
 
-  //meh fundera på det här ett tag ...
   char ccstring[5];
-  char *ccsp;
   int char_count = 0;
   
   for (;;)
@@ -57,8 +55,8 @@ void ReceivePackets(void)
       {
       case 1:
         PostText(bfr) ;
-	ccsp = FormatUnsigned(ccstring, char_count, 10, 5, '0'); // och det här
-	SendPacket(3,*ccsp,5);
+	FormatUnsigned(ccstring, char_count, 10, 5, ' ');
+	SendPacket(3,ccstring,5);
         break ;
       case 2:
         PostTime(bfr) ;

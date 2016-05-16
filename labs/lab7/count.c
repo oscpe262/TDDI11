@@ -32,7 +32,7 @@ void InboundCount(void)
 
   for (;;) {
     bfr = OSQPend(count_queue, 0, &err);
-    WindowSetCursor(cc, 0, 1);
+    WindowSetCursor(cc, 0, 6);
     WindowPutString(cc, bfr);
     free(bfr);
   }
