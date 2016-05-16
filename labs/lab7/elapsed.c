@@ -67,7 +67,7 @@ void ElapsedLocal(void)
     /* Update the display */
     WindowSetCursor(w, 0, 1) ;
     bfr = AsciiTime(&elapsed) ;
-    SendPacket(2, bfr, 11) ;
+    SendPacket(2, bfr, 10) ;
     WindowPutString(w, bfr) ;
     
     OSTimeDly(100) ; /* Sleep for about .1 second */
