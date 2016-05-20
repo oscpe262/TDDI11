@@ -1,3 +1,5 @@
+Table for mandatory Ch8. Optional would extend with another INPUT column affecting the AUTO_BLINK_* states.
+
 +-------------------+----------------------+--------------------------------------------------------------------+
 | ################# |         INPUT        |				NEXT STATE			        |
 |   CURRENT STATE   +----------------------+--------------------------------------------------------------------+
